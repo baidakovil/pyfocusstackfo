@@ -15,13 +15,14 @@
 
 import operator
 import os
+import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Tuple
 
 import piexif
 
 #  Path prompted to user when choose folder with jpgs
-PATH_LIBRARY_DEFAULT = '/home/eva/git/pyfocusstack'
+PATH_LIBRARY_DEFAULT = '/home/eva/git/pyfocusstackfo'
 
 #  Name of the future root folder where stacks will be located
 FOLDER_NAME_ROOT = 'fs'
@@ -39,19 +40,23 @@ BIG_STRANGE_STACKLEN = 10
 TIMESTAMP_FORMAT_EXIF = '%Y:%m:%d %H:%M:%S'
 
 
-def read_jpg(jpg_folder):
+def read_jpg(jpg_folder: str) -> Tuple[List[str], List[datetime]]:
     """
-    Read names and dates from jpg files in source folder
-    Also define where files are lie
+    Read names of jpg files in source folder and timestamps when they were taken.
+    Args:
+        jpg_folder: path to folder where jpg stored
+    Returns:
+        list of names & list of datetimes
     """
     print('\nRead jpg...', end='')
     names = [file for file in os.listdir(jpg_folder) if file.lower().endswith('.jpg')]
     names = sorted(names)
 
     if len(names) != 0:
-        print('ok.\nGot {len(names)} JPG in folder')
+        print(f'ok.\nGot {len(names)} JPG in folder')
     else:
-        print('\nNo JPG files in folder!')
+        print('\nNo JPG files in folder! Exit')
+        sys.exit()
 
     dates_bytes = [
         piexif.load(os.path.join(jpg_folder, name))['0th'][306] for name in names
@@ -64,16 +69,16 @@ def read_jpg(jpg_folder):
         f'Got {len(dates)} timestamps in JPGs\nFROM: {dates[0]} \nTO  : {dates[-1]}\n'
     )
 
-    return dates, names
+    return names, dates
 
 
-def get_stacks(dates: List[datetime], names: List[str]) -> List[List[str]]:
+def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
     """
     Main function, creating list of stacks (list of lists) and print statistics on size
     of stacks.
     Args:
-        dates: list of dates from photos
         names: list of photo names
+        dates: list of dates from photos
     Returns:
         List of stacks
     """
@@ -161,23 +166,26 @@ def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
 
 def get_folders() -> str:
     """
-    Ask user about path where files stored
+    Ask user about path where files stored.
+    Returns:
+        path
     """
+    if not os.path.isdir(PATH_LIBRARY_DEFAULT):
+        print('DEFAULT LIBRARY PATH DO NOT EXIST!\n!!\n!!CHANGE IT IN LINE 24\n!!')
     path_library, folder_jpg = '', ' '
     first_try = True
     while not os.path.isdir(path_library):
         if first_try:
             path_library = input(
-                f'\nInput library path (parent folder) OR press Enter for default.\n\
-Default library path: {PATH_LIBRARY_DEFAULT}\n'
+                f'Input library path or press Enter for default, {PATH_LIBRARY_DEFAULT}\n\
+Input: '
             )
             first_try = False
-            if path_library == '':
-                print('Default choosed. Ok. ', end='')
-                path_library = PATH_LIBRARY_DEFAULT
-                break
         else:
             path_library = input('That is not existing path! Please try again:\n')
+        if path_library == '':
+            path_library = PATH_LIBRARY_DEFAULT
+            print('Default choosed. Ok. ', end='')
     print(f'Library path: {path_library}')
 
     first_try = True
@@ -188,19 +196,21 @@ Default library path: {PATH_LIBRARY_DEFAULT}\n'
             first_try = False
         else:
             folder_jpg = input('That is not existing folder. Please try again:\n')
+        folder_jpg == '' if folder_jpg == '/' else folder_jpg  # pylint: disable=pointless-statement
+
     result = os.path.join(path_library, folder_jpg)
     print(f'Nice. Program will do stack in folder: {result}')
     return result
 
 
-def main():
+def main() -> None:
     """
-    Start the process.
+    Start the process. Start.
     """
     print('START\n')
     jpg_folder = get_folders()
-    dates, names = read_jpg(jpg_folder)
-    stacks = get_stacks(dates, names)
+    names, dates = read_jpg(jpg_folder)
+    stacks = get_stacks(names, dates)
     move_stacks(stacks, jpg_folder)
     print('\nFINISH')
 
