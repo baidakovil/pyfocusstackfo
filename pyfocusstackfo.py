@@ -44,20 +44,21 @@ def read_jpg(jpg_folder):
     Read names and dates from jpg files in source folder
     Also define where files are lie
     """
-    print(f'\nRead jpg...', end='')
+    print('\nRead jpg...', end='')
     names = [file for file in os.listdir(jpg_folder) if file.lower().endswith('.jpg')]
     names = sorted(names)
 
-    print(f'ok.\nGot {len(names)} JPG in folder') if len(names) != 0 else print(
-        f'\nNo JPG files in folder!'
-    )
+    if len(names) != 0:
+        print('ok.\nGot {len(names)} JPG in folder')
+    else:
+        print('\nNo JPG files in folder!')
 
     dates_bytes = [
         piexif.load(os.path.join(jpg_folder, name))['0th'][306] for name in names
     ]
 
-    format = TIMESTAMP_FORMAT_EXIF
-    dates = sorted([datetime.strptime(str(date)[2:-1], format) for date in dates_bytes])
+    tsf = TIMESTAMP_FORMAT_EXIF
+    dates = sorted([datetime.strptime(str(date)[2:-1], tsf) for date in dates_bytes])
 
     print(
         f'Got {len(dates)} timestamps in JPGs\nFROM: {dates[0]} \nTO  : {dates[-1]}\n'
@@ -176,7 +177,7 @@ Default library path: {PATH_LIBRARY_DEFAULT}\n'
                 path_library = PATH_LIBRARY_DEFAULT
                 break
         else:
-            path_library = input(f'That is not existing path! Please try again:\n')
+            path_library = input('That is not existing path! Please try again:\n')
     print(f'Library path: {path_library}')
 
     first_try = True
@@ -186,7 +187,7 @@ Default library path: {PATH_LIBRARY_DEFAULT}\n'
             folder_jpg = input('\nInput folder name with jpg:\n')
             first_try = False
         else:
-            folder_jpg = input(f'That is not existing folder. Please try again:\n')
+            folder_jpg = input('That is not existing folder. Please try again:\n')
     result = os.path.join(path_library, folder_jpg)
     print(f'Nice. Program will do stack in folder: {result}')
     return result
@@ -196,12 +197,12 @@ def main():
     """
     Start the process.
     """
-    print(f'START\n')
+    print('START\n')
     jpg_folder = get_folders()
     dates, names = read_jpg(jpg_folder)
     stacks = get_stacks(dates, names)
     move_stacks(stacks, jpg_folder)
-    print(f'\nFINISH')
+    print('\nFINISH')
 
 
 main()
