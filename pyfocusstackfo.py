@@ -44,7 +44,7 @@ def read_jpg(jpg_folder: str) -> Tuple[List[str], List[datetime]]:
     """
     Read names of jpg files in source folder and timestamps when they were taken.
     Args:
-        jpg_folder: path to folder where jpg stored
+        jpg_folder: path to folder where jpgs are stored
     Returns:
         list of names & list of datetimes
     """
@@ -107,10 +107,12 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
                 )
         return stacks, stack_stat
 
-    stack, stacks, stack_stat = [], [], {}
-    stack.append(dates[0])
+    stack = []
+    stacks: List[List[str]] = []
+    stack_stat: Dict[int, int] = {}
+    stack.append(names[0])
 
-    for i in range(1, len(dates) - 1):
+    for i in range(1, len(dates)):
         delta = dates[i] - dates[i - 1]
         if delta <= MAXDELTA:
             #  Dates near each other -> Add name to stack.
@@ -143,7 +145,9 @@ def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
         stacks: list of stacks
         JPGPATH: folder where located files in `stacks`
     """
-
+    if not stacks:
+        print('No stacks here! Exit')
+        sys.exit()
     folder_count, file_count = 0, 0
     os.mkdir(os.path.join(jpg_folder, FOLDER_NAME_ROOT))
     print(f'\nRoot folder {FOLDER_NAME_ROOT} created')
@@ -166,7 +170,7 @@ def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
 
 def get_folders() -> str:
     """
-    Ask user about path where files stored.
+    Ask user about path where jpgs are stored.
     Returns:
         path
     """
@@ -205,7 +209,7 @@ Input: '
 
 def main() -> None:
     """
-    Start the process. Start.
+    Start the process. Start!
     """
     print('START\n')
     jpg_folder = get_folders()
@@ -215,4 +219,5 @@ def main() -> None:
     print('\nFINISH')
 
 
-main()
+if __name__ == '__main__':
+    main()
