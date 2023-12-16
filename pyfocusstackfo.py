@@ -21,7 +21,7 @@ from typing import Dict, List, Tuple
 import piexif
 
 #  Path prompted to user when choose folder with jpgs
-PATH_LIBRARY_DEFAULT = '/home/eva/photos'
+PATH_LIBRARY_DEFAULT = '<your-path-where-you-store-folders-with-photos>'
 
 #  Name of the future root folder where stacks will be located
 FOLDER_NAME_ROOT = 'fs'
