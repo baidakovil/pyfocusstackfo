@@ -1,6 +1,5 @@
-# pyfocusstackfo — Utility to reallocate photos taken for focus stacking into folders.
+## pyfocusstackfo — Utility to reallocate photos taken for focus stacking into folders.
 # Copyright (C) 2023 Ilia Baidakov <baidakovil@gmail.com>
-
 # This program is free software: you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software Foundation,
 # either version 3 of the License, or (at your option) any later version.
@@ -22,19 +21,19 @@ from typing import Dict, List, Tuple
 import piexif
 
 #  Path prompted to user when choose folder with jpgs
-PATH_LIBRARY_DEFAULT = '/home/eva/git/pyfocusstackfo'
+PATH_LIBRARY_DEFAULT = '/home/eva/photos'
 
 #  Name of the future root folder where stacks will be located
 FOLDER_NAME_ROOT = 'fs'
 
 #  Maximum time interval between stacked photos
-MAXDELTA = timedelta(seconds=2)
+MAX_TIME_DELTA = timedelta(seconds=2)
 
 #  Min quantity of file to create separate folder
-MINSTACKLEN = 5
+MIN_STACK_LEN = 5
 
 #  If stack larger than this, program will print warning message, but create stack
-BIG_STRANGE_STACKLEN = 10
+LENGTH_STACK_WARNING = 10
 
 #  Datetime format used in cameras exif
 TIMESTAMP_FORMAT_EXIF = '%Y:%m:%d %H:%M:%S'
@@ -98,10 +97,10 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
         Returns:
             renewed list of stacks & renewed statistics
         """
-        if len(stack) >= MINSTACKLEN:
+        if len(stack) >= MIN_STACK_LEN:
             stacks.append(stack)
             stack_stat[len(stack)] = stack_stat.get(len(stack), 0) + 1
-            if len(stack) > BIG_STRANGE_STACKLEN:
+            if len(stack) > LENGTH_STACK_WARNING:
                 print(
                     f'Strange long stack ({len(stack)}) elements. From {stack[0]} to {stack[-1]}'
                 )
@@ -114,7 +113,7 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
 
     for i in range(1, len(dates)):
         delta = dates[i] - dates[i - 1]
-        if delta <= MAXDELTA:
+        if delta <= MAX_TIME_DELTA:
             #  Dates near each other -> Add name to stack.
             stack.append(names[i])  # type: ignore
             if i == (len(dates) - 1):
