@@ -2,7 +2,8 @@
 
 [![Pylint](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml) [![Testing](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml) [![mypy](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml)
 
-This repo for those who knows what focus stacking photographic technique is. And for those who don't know, but like macro photo.  
+This repo for those who knows what focus stacking photographic technique is.  
+And for those who don't know, but like macro photo.  
 
 It consists of two scripts that make up the complete process of focus stacking:
 * **pyfocusstackfo.py** - Organizes files from a camera into folders: 1 folder = 1 photo
