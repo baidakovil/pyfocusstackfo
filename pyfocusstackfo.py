@@ -211,7 +211,13 @@ def main() -> None:
     Start the process. Start!
     """
     print('START\n')
-    jpg_folder = get_folders()
+    try:
+        if sys.argv[1] == '-l':
+            jpg_folder = get_folders()
+        else:
+            jpg_folder = os.getcwd()
+    except IndexError:
+        jpg_folder = os.getcwd()
     names, dates = read_jpg(jpg_folder)
     stacks = get_stacks(names, dates)
     move_stacks(stacks, jpg_folder)
