@@ -16,6 +16,7 @@ import contextlib
 import io
 import os
 import shutil
+import sys
 import unittest
 from unittest.mock import patch
 from zipfile import ZipFile
@@ -33,6 +34,7 @@ answers_4 = iter([os.path.join(ROOT_DIR, TEST_DIR), TEMP_DIR])
 answers_5 = iter([os.path.join(ROOT_DIR, TEST_DIR), TEMP_DIR])
 answers_6 = iter(['', os.path.join(TEST_DIR, TEMP_DIR)])
 answers_7 = iter([ROOT_DIR, TEST_DIR])
+dialog_arg = ['pyfocusstackfo.py', '-l']
 
 
 class Test(unittest.TestCase):
@@ -48,7 +50,8 @@ class Test(unittest.TestCase):
             myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                pyfocusstackfo.main()
         self.assertIn("Got 97 timestamps in JPGs", buf.getvalue())
         self.assertIn("9 folders created\n64 files moved", buf.getvalue())
         shutil.rmtree(os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
@@ -62,8 +65,9 @@ class Test(unittest.TestCase):
             myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            with self.assertRaises(SystemExit):
-                pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                with self.assertRaises(SystemExit):
+                    pyfocusstackfo.main()
         self.assertIn("Got 33 timestamps in JPGs", buf.getvalue())
         self.assertIn("No stacks here! Exit", buf.getvalue())
         shutil.rmtree(os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
@@ -79,7 +83,8 @@ class Test(unittest.TestCase):
             myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                pyfocusstackfo.main()
         self.assertIn("Strange long stack (16) elements", buf.getvalue())
         self.assertIn("1 folders created\n16 files moved", buf.getvalue())
         shutil.rmtree(os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
@@ -95,7 +100,8 @@ class Test(unittest.TestCase):
             myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                pyfocusstackfo.main()
         self.assertIn("Got 22 timestamps in JPGs", buf.getvalue())
         self.assertIn("Stack size  5 files: 1 stacks", buf.getvalue())
         self.assertIn("1 folders created\n5 files moved", buf.getvalue())
@@ -112,7 +118,8 @@ class Test(unittest.TestCase):
             myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                pyfocusstackfo.main()
         self.assertIn(
             "Got 9 timestamps in JPGs\nFROM: 2023-12-02 13:30:39", buf.getvalue()
         )
@@ -129,7 +136,8 @@ class Test(unittest.TestCase):
     #         myzip.extractall(path=os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
     #     buf = io.StringIO()
     #     with contextlib.redirect_stdout(buf):
-    #         pyfocusstackfo.main()
+    #         with patch.object(sys, 'argv', dialog_arg):
+    #             pyfocusstackfo.main()
     #     self.assertIn("Got 97 timestamps in JPGs", buf.getvalue())
     #     self.assertIn("9 folders created\n64 files moved", buf.getvalue())
     #     shutil.rmtree(os.path.join(ROOT_DIR, TEST_DIR, TEMP_DIR))
@@ -141,8 +149,9 @@ class Test(unittest.TestCase):
         """
         buf = io.StringIO()
         with contextlib.redirect_stdout(buf):
-            with self.assertRaises(SystemExit):
-                pyfocusstackfo.main()
+            with patch.object(sys, 'argv', dialog_arg):
+                with self.assertRaises(SystemExit):
+                    pyfocusstackfo.main()
         self.assertIn("No JPG files in folder! Exit", buf.getvalue())
 
 
