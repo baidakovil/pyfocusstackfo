@@ -26,7 +26,7 @@ More info below.
 ## Do focus stacking with .js script
 
 ⬇️  
-<a href="docs/explanation.png"><img width="95%" src="docs/explanation.png"/></a>
+<a href="docs/photoshop_guide.png"><img width="95%" src="docs/photoshop_guide.png"/></a>
 
 
 ## My experience
@@ -37,8 +37,7 @@ Photoshop stacking function works so well that you won't see the difference even
 
 I can't say this about any other software for focus stacking: one bad photo in most cases will broke the result. 
 
-I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone SE 1st Gen in focus stacking mode. It takes photos with intervals 0-1 seconds.  
-So, having `MAX_TIME_DELTA = 2 sec`, I get desired result almost always. 
+I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone SE 1st Gen in focus stacking mode. It takes photos with intervals 0-1 seconds. So, having `MAX_TIME_DELTA = 2 sec`, I get desired result almost always. 
 Sometimes, of course, there could be photos taken close to each other — but thanks to `MIN_STACK_LEN` setting, they probably will not fall into "stack".
 
  Some of the last images: [1], [2], [3], [4], [5].
@@ -51,7 +50,7 @@ Sometimes, of course, there could be photos taken close to each other — but th
 
 ## Details on the _.py_ script
 
-This script is enhansed version of script found on 
+Again: **pyfocusstackfo.py** script used to collect *.jpg files into separate folders in order to further using with **photoshop_script_subfolders.js** to obtain focus stacking images.
 
 #### How does it works
 
@@ -91,3 +90,16 @@ Please feel free to contribute, create pull requests, comment and further.
 
 If you find any of this scripts helpful, please leave feedback.  
 In case you will happy to see `pyfocusstack.py` as **python package**, please write to me: If there will be at least single person who find this helpful, I reformat the code and add it to **PyPi** 🙃. 
+
+## Build with
+
+**[Adobe Photoshop]** - «Leading AI photo & Design software» since 1990 **|** *proprietary*  
+**[JavaScript]** - Scripting language widely used in web pages and web applications **|** *Licence depends on implementation*  
+**[pyexif]** - Python wrapping for the exiftool library since 2011 **|** *Apache 2*  
+**[Python]** - Language to work quickly and integrate systems more effectively since 1991 **|** *GPL compatible*    
+
+
+[Adobe Photoshop]: https://www.adobe.com/products/photoshop.html
+[pyexif]: https://pypi.org/project/pyexif/
+[Python]: https://www.python.org/
+[JavaScript]: https://ecma-international.org/publications-and-standards/standards/ecma-262/
