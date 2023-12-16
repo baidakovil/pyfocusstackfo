@@ -2,13 +2,15 @@
 
 [![Pylint](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml) [![Testing](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml) [![mypy](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml)
 
-This repo for those who knows what is focus stacking photographic technique.
-It consists of two scripts:
-* **pyfocusstackfo.py** - organize files from camera into folders: 1 folder = 1 future photo
-* **photoshop_script_subfolders.js** - do focus stacking in Adobe Photoshop for many folders at once
+This repo for those who knows what focus stacking photographic technique is. And for those who don't know, but like macro photo.  
 
-I found workflow with this scripts excellent for ease, robust, quick and perfect-result focus stacking.  
-What I have tried, in order of declining result photo quality: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. This much better.
+It consists of two scripts that make up the complete process of focus stacking:
+* **pyfocusstackfo.py** - Organizes files from a camera into folders: 1 folder = 1 photo
+* **photoshop_script_subfolders.js** - Does a focus stacking in Adobe Photoshop for multiple folders at a time
+
+The workflow excellent for ease, robust, fast and well-expected results.  
+
+I have tried: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. First two can compete when you tweak the settings. The one above is better without tweaking.
 
 [Helicon Focus]: https://www.heliconsoft.com/heliconsoft-products/helicon-focus/
 [Zerene]: https://www.zerenesystems.com/cms/stacker
@@ -17,7 +19,7 @@ What I have tried, in order of declining result photo quality: [Zerene], [Helico
 
 ##  Prepare files with .py script
 
-Click for view full size ⬇️
+Click for full size ⬇️
 
   <a href="docs/explanation.png"><img width="95%" src="docs/explanation.png"/></a>
 
@@ -25,22 +27,24 @@ More info below.
 
 ## Do focus stacking with .js script
 
-⬇️  
+Workflow below was tested with Photoshop **CC 2020 21.2.0**.  
+Click for full size ⬇️
+
 <a href="docs/photoshop_guide.png"><img width="95%" src="docs/photoshop_guide.png"/></a>
 
 
 ## My experience
 
-I shoot nature and can have **thousand of photos from single walk**, whith 5-10 photos in each stack, meaning ~100 focus stacks once. With this scripts, it takes an hour to get result. Hope Adobe will pay me sometimes.  
+I shoot nature and can have **thousand of photos from single walk**, with 5-10 photos in each stack, meaning ~100 focus stacks once. With this scripts, it takes an hour to get result for everything about everything.
 
-Photoshop stacking function works so well that you won't see the difference even with blurred or damaged photos inside of "stacking" photos. I tried some experiments with cleaning of *unsuccessful* photos, but saw no differences: with Photoshop, result at most depends on *successfull* photos. This ability especially important for me as I offen shoot without tripod and half of my photos are garbage.
+Photoshop *Auto-Align* and *Auto-Blend* functions works so well that you won't see a difference even with defocused, corrupted, rotated photos among the good stacking photos. I tried some experiments with cleaning these unsuccessful photos before stacking, but I didn't see the difference: with Photoshop, result at most depends on *successfull* photos. This ability especially important to me as I offen shoot without a tripod and half of my photos are garbage .
 
-I can't say this about any other software for focus stacking: one bad photo in most cases will broke the result. 
+This is not the case with other focus stacking software: one bad photo in most cases will ruin the whole result. 
 
-I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone SE 1st Gen in focus stacking mode. It takes photos with intervals 0-1 seconds. So, having `MAX_TIME_DELTA = 2 sec`, I get desired result almost always. 
-Sometimes, of course, there could be photos taken close to each other — but thanks to `MIN_STACK_LEN` setting, they probably will not fall into "stack".
+I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone SE 1st Gen in focus stacking mode. It takes photos with intervals 0.5-1 seconds. So, having `MAX_TIME_DELTA = 2 sec` in `pyfocusstackfo.py`, I get files accumulated by folders right almost always 👍.   
+Sometimes, of course, there could be non-focus-stacking photos taken close to each other — but thanks to `MIN_STACK_LEN` setting, they probably will not fall into "stack".
 
- Some of the last images: [1], [2], [3], [4], [5].
+ Some of the last images, just for fun: [1], [2], [3], [4], [5].
 
 [1]: https://www.inaturalist.org/observations/187942621
 [2]: https://www.inaturalist.org/observations/187239060
@@ -81,6 +85,18 @@ Be aware of:
 
 [Discussion]: https://community.adobe.com/t5/photoshop-ecosystem-discussions/automate-focus-stacking-script-action-help-needed/m-p/10483237
 
+## Build with
+
+**[Adobe Photoshop]** - «Leading AI photo & Design software» since 1990 **|** *proprietary*  
+**[JavaScript]** - Scripting language widely used in web pages and web applications since 1995 **|** *Licence depends on implementation*  
+**[pyexif]** - Python wrapping for the exiftool library since 2011 **|** *Apache 2*  
+**[Python]** - Language to work quickly and integrate systems more effectively since 1991 **|** *GPL compatible*    
+
+
+[Adobe Photoshop]: https://www.adobe.com/products/photoshop.html
+[pyexif]: https://pypi.org/project/pyexif/
+[Python]: https://www.python.org/
+[JavaScript]: https://ecma-international.org/publications-and-standards/standards/ecma-262/
 
 ## Contributions
 
@@ -90,16 +106,3 @@ Please feel free to contribute, create pull requests, comment and further.
 
 If you find any of this scripts helpful, please leave feedback.  
 In case you will happy to see `pyfocusstack.py` as **python package**, please write to me: If there will be at least single person who find this helpful, I reformat the code and add it to **PyPi** 🙃. 
-
-## Build with
-
-**[Adobe Photoshop]** - «Leading AI photo & Design software» since 1990 **|** *proprietary*  
-**[JavaScript]** - Scripting language widely used in web pages and web applications **|** *Licence depends on implementation*  
-**[pyexif]** - Python wrapping for the exiftool library since 2011 **|** *Apache 2*  
-**[Python]** - Language to work quickly and integrate systems more effectively since 1991 **|** *GPL compatible*    
-
-
-[Adobe Photoshop]: https://www.adobe.com/products/photoshop.html
-[pyexif]: https://pypi.org/project/pyexif/
-[Python]: https://www.python.org/
-[JavaScript]: https://ecma-international.org/publications-and-standards/standards/ecma-262/
