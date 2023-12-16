@@ -3,6 +3,9 @@
 settings.json
 .vscode
 
+# gimp files
+*gimp*
+
 # Byte-compiled
 __pycache__/
 
