@@ -11,13 +11,6 @@ It consists of two scripts that make up the complete process of focus stacking:
 
 The workflow excellent for ease, robust, fast and well-expected results.  
 
-I have tried: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. First two can compete when you tweak the settings. The one above is better without tweaking.
-
-[Helicon Focus]: https://www.heliconsoft.com/heliconsoft-products/helicon-focus/
-[Zerene]: https://www.zerenesystems.com/cms/stacker
-[ChimpStackr]: https://github.com/noah-peeters/ChimpStackr
-[Enfuse]: https://enblend.sourceforge.net/enfuse.doc/enfuse_4.2.xhtml/enfuse.html
-
 ##  Prepare files with .py script
 
 Click for full size ⬇️
@@ -35,6 +28,13 @@ Click for full size ⬇️
 
 
 ## My experience
+
+I have tried: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. First two can compete when you tweak the settings. The offered one is better without tweaking.
+
+[Helicon Focus]: https://www.heliconsoft.com/heliconsoft-products/helicon-focus/
+[Zerene]: https://www.zerenesystems.com/cms/stacker
+[ChimpStackr]: https://github.com/noah-peeters/ChimpStackr
+[Enfuse]: https://enblend.sourceforge.net/enfuse.doc/enfuse_4.2.xhtml/enfuse.html
 
 I shoot nature and can have **thousand of photos from single walk**, with 5-10 photos in each stack, meaning ~100 focus stacks once. With this scripts, it takes an hour to get result for everything about everything.
 
