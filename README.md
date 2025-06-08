@@ -2,50 +2,221 @@
 
 [![Pylint](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml) [![Testing](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml) [![mypy](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml)
 
-This repo for those who knows what focus stacking photographic technique is.  
-And for those who don't know, but like macro photo.  
+**Complete automated focus stacking workflow** for macro photography enthusiasts who want professional results with minimal effort.
 
-It consists of two scripts that make up the complete process of focus stacking:
-* **pyfocusstackfo.py** - Organizes files from a camera into folders: 1 folder = 1 photo
-* **photoshop_script_subfolders.js** - Does a focus stacking in Adobe Photoshop for multiple folders at a time
+## 🌟 What Makes This Special
 
-The workflow excellent for ease, robust, fast and well-expected results.  
+This is a **fully automated 3-step intelligent workflow** that handles everything from iCloud Photos extraction to final focus stacked images:
 
-##  Prepare files with .py script
+* **Step 1**: `fetcher.py` - Automatically extracts recent photos from your iCloud Photos library
+* **Step 2**: `grouper.py` - Intelligently analyzes timestamps and groups photos for focus stacking  
+* **Step 3**: `stacker.js` - Processes focus stacks in Adobe Photoshop using advanced algorithms
 
-Click for full size ⬇️
+**🧠 Intelligent Processing**: The system automatically detects when no focus stacking is needed and gracefully skips unnecessary processing steps, saving you time and resources. **No manual intervention required** - just run `python runner.py` and get professional results.  
 
-  <a href="docs/explanation.png"><img width="95%" src="docs/explanation.png"/></a>
+## 🚀 Quick Start
 
-More info below.
+### Prerequisites
+- **macOS** (required for Photos app integration)
+- **Adobe Photoshop** (tested with CC 2020 21.2.0 and newer)
+- **Python 3.8+** with dependencies: `pip install -r requirements.txt`
 
-## Do focus stacking with .js script
+### Installation & Setup
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/baidakovil/pyfocusstackfo.git
+   cd pyfocusstackfo
+   ```
 
-Workflow below was tested with Photoshop **CC 2020 21.2.0**.  
-Click for full size ⬇️
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-<a href="docs/photoshop_guide.png"><img width="95%" src="docs/photoshop_guide.png"/></a>
+3. **Configure your settings**:
+   ```bash
+   cp settings.txt my_settings.txt
+   ```
+   Edit `my_settings.txt` with your paths and preferences:
+   ```json
+   {
+       "hours_icloud": "24",
+       "stacker": "stacker.js",
+       "path_grouped": "/Users/yourname/Documents/focus_stacks/fs",
+       "path_iphone": "/Users/yourname/Documents/extracted_photos/",
+       "photoshop_app": "Adobe Photoshop 2025"
+   }
+   ```
 
+### Running the Workflow
+```bash
+# Run with default settings.txt
+python runner.py
 
-## My experience
+# Or with custom settings file
+python runner.py my_settings.txt
 
-I have tried: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. First two can compete when you tweak the settings. The offered one is better without tweaking.
+# The system automatically:
+# 1. ✅ Extracts recent photos from iCloud Photos
+# 2. 🔍 Analyzes photos for focus stacking opportunities  
+# 3. 🎨 Processes groups in Photoshop (or skips if no groups found)
+
+# Example output:
+# ========================================
+# 🎯 PYFOCUSSTACKFO - Automated Focus Stacking Workflow
+# ========================================
+# 
+# Step 1: Fetching photos from iCloud Photos library...
+# ✅ Step 1 (fetcher): Success
+# 
+# Step 2: Grouping photos for focus stacking...
+# ✅ Step 2 (grouper): Success - groups created
+# 
+# Step 3: Processing focus stacks in Photoshop...
+# ✅ Step 3 (stacker): Success
+# 
+# 🎉 Workflow completed successfully!
+```
+
+## 🧠 Intelligent Workflow
+
+### Smart Decision Making
+The system intelligently adapts to different photo scenarios:
+
+| Scenario | Step 1 | Step 2 | Step 3 | Result |
+|----------|---------|---------|---------|---------|
+| **Normal Operation** | ✅ Photos extracted | ✅ Groups created | ✅ Photoshop processing | Focus stacked images |
+| **No Recent Photos** | ❌ No photos found | ⏭️ Skipped | ⏭️ Skipped | Clean exit with message |
+| **Photos but No Stacks** | ✅ Photos extracted | ⚠️ No groups (sequences too short) | ⏭️ **Intelligently skipped** | Graceful completion |
+| **Error State** | ❌ Error occurred | ⏭️ Skipped | ⏭️ Skipped | Error reported to user |
+
+### Why This Intelligence Matters
+
+**🎯 Efficiency**: No time wasted on unnecessary Photoshop processing when photos don't need stacking
+
+**🧠 User Experience**: The system "understands" your photo library and adapts accordingly
+
+**📱 Real-world Scenarios**: Perfect for mixed photo libraries with both focus stacks and regular photos
+
+**🔄 Workflow Integration**: Fits naturally into daily photography workflows without manual intervention
+
+### Example Scenarios
+
+```bash
+# Scenario 1: Mixed photo session (some stacks, some singles)
+# Photos extracted: 20 photos
+# Groups created: 2 focus stacks (5 photos each)
+# Result: 2 focus stacked images + 10 individual photos remain untouched
+
+# Scenario 2: Portrait session (no focus stacking needed)  
+# Photos extracted: 15 photos
+# Groups created: 0 (all photos taken >2 seconds apart)
+# Result: Step 3 automatically skipped, clean completion
+
+# Scenario 3: No recent photos
+# Photos extracted: 0
+# Result: Workflow stops gracefully with informative message
+```
+
+The system handles different scenarios automatically:
+
+```
+Step 1: Extract photos from iCloud Photos
+    ↓
+Step 2: Analyze photos for focus stacking groups
+    ├── No JPG files found → Exit with informative message
+    ├── No groups created → Skip Step 3, complete gracefully ⭐
+    └── Groups created → Proceed to Step 3
+         ↓
+Step 3: Process focus stacks in Photoshop
+    ↓
+Complete! 🎉
+```
+
+**🎯 Key Features:**
+- **Smart Detection**: Automatically detects when no focus stacking is needed
+- **Conditional Processing**: Skips Photoshop step when no groups are found
+- **Robust Error Handling**: Graceful handling of all edge cases
+- **iCloud Integration**: Direct extraction from Photos library
+- **Professional Quality**: Photoshop's superior Auto-Align and Auto-Blend algorithms
+
+## 📁 Project Structure
+
+```
+pyfocusstackfo/
+├── runner.py                   # 🎯 Main workflow orchestrator (3-step intelligent workflow)
+├── fetcher.py                  # 📱 Step 1: iCloud Photos extraction with CLI interface
+├── grouper.py                  # 🔍 Step 2: Smart photo grouping with exit codes  
+├── stacker.js                  # 🎨 Step 3: Photoshop automation (conditionally executed)
+├── settings.txt                # ⚙️ Configuration file template
+├── test_no_groups.py          # 🧪 Tests conditional Step 3 skipping
+├── test_integration.py        # 🧪 Comprehensive workflow validation
+├── demo_final.py              # 🎬 End-to-end demonstration
+├── IMPLEMENTATION_SUMMARY.md  # 📋 Technical implementation details
+└── requirements.txt           # 📦 Python dependencies
+```
+
+## 🔧 Component Details
+
+### Step 1: Photo Fetcher (`fetcher.py`)
+Extracts photos from the macOS Photos library based on recency:
+- Uses AppleScript to communicate with Photos app
+- Configurable time window (hours)
+- Exports to specified destination folder
+- Handles permissions and error cases
+
+### Step 2: Photo Grouper (`grouper.py`)
+Intelligently organizes photos into focus stacking groups:
+- Analyzes EXIF timestamps to detect photo sequences
+- Groups photos taken within `MAX_TIME_DELTA` (2 seconds by default)
+- Only creates groups with minimum `MIN_STACK_LEN` photos (5 by default)
+- **Smart exit codes**: 
+  - `0` = Success (groups created and ready for Photoshop)
+  - `1` = No JPG files found in source folder
+  - `2` = Photos found but no groups created (sequences too short)
+- **Intelligent communication**: Provides meaningful status to workflow orchestrator
+
+### Step 3: Photoshop Processor (`stacker.js`)
+**Conditionally executed** based on Step 2 results:
+- Only runs when groups are successfully created in Step 2
+- Processes multiple folders automatically in batch
+- Uses Photoshop's Auto-Align and Auto-Blend functions for professional quality
+- Exports high-quality JPEG results with automatic cleanup
+- **Smart execution**: Automatically skipped when no groups exist
+
+### Workflow Orchestrator (`runner.py`)
+The intelligent brain that coordinates all components:
+- **Settings management**: Loads configuration from JSON settings file
+- **Step coordination**: Executes steps in sequence with proper error handling  
+- **Status monitoring**: Interprets exit codes and makes intelligent decisions
+- **User feedback**: Provides clear progress updates and completion status
+- **Conditional logic**: Automatically skips Step 3 when Step 2 produces no groups
+- **Robust execution**: Handles errors gracefully with informative messages
+
+## 📷 Photography Setup & Experience
+
+I have tried: [Zerene], [Helicon Focus], [ChimpStackr], [Enfuse]. The first two can compete when you tweak the settings, but this Photoshop-based solution works better without any tweaking.
 
 [Helicon Focus]: https://www.heliconsoft.com/heliconsoft-products/helicon-focus/
 [Zerene]: https://www.zerenesystems.com/cms/stacker
 [ChimpStackr]: https://github.com/noah-peeters/ChimpStackr
 [Enfuse]: https://enblend.sourceforge.net/enfuse.doc/enfuse_4.2.xhtml/enfuse.html
 
-I shoot nature and can have **thousand of photos from single walk**, with 5-10 photos in each stack, meaning ~100 focus stacks once. With this scripts, it takes an hour to get result for everything about everything.
+I shoot nature and can have **thousands of photos from a single walk**, with 5-10 photos in each stack, meaning ~100 focus stacks at once. With these scripts, it takes about an hour to get results for everything.
 
-Photoshop *Auto-Align* and *Auto-Blend* functions works so well that you won't see a difference even with defocused, corrupted, rotated photos among the good stacking photos. I tried some experiments with cleaning these unsuccessful photos before stacking, but I didn't see the difference: with Photoshop, result at most depends on *successfull* photos. This ability especially important to me as I offen shoot without a tripod and half of my photos are garbage .
+### Why Photoshop Works Best
 
-This is not the case with other focus stacking software: one bad photo in most cases will ruin the whole result. 
+Photoshop's *Auto-Align* and *Auto-Blend* functions work so well that you won't see a difference even with defocused, corrupted, or rotated photos among the good stacking photos. I tried experiments with cleaning unsuccessful photos before stacking, but didn't see much difference: with Photoshop, the result mostly depends on the *successful* photos. This ability is especially important to me as I often shoot without a tripod and half of my photos are suboptimal.
 
-I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone SE 1st Gen in focus stacking mode. It takes photos with intervals 0.5-1 seconds. So, having `MAX_TIME_DELTA = 2 sec` in `pyfocusstackfo.py`, I get files accumulated by folders right almost always 👍.   
-Sometimes, of course, there could be non-focus-stacking photos taken close to each other — but thanks to `MIN_STACK_LEN` setting, they probably will not fall into "stack".
+This is not the case with other focus stacking software: one bad photo will often ruin the whole result.
 
- Some of the last images, just for fun: [1], [2], [3], [4], [5].
+### Mobile Photography Integration
+
+I use [CameraPixels](https://apps.apple.com/us/app/camerapixels-lite/id1125808205) iOS app on my iPhone in focus stacking mode. It takes photos with intervals of 0.5-1 seconds. Having `MAX_TIME_DELTA = 2 sec` in the grouper, I get files organized into folders correctly almost always 👍.
+
+Sometimes there could be non-focus-stacking photos taken close to each other — but thanks to the `MIN_STACK_LEN` setting, they probably won't be grouped into a "stack".
+
+Recent examples: [1], [2], [3], [4], [5].
 
 [1]: https://www.inaturalist.org/observations/187942621
 [2]: https://www.inaturalist.org/observations/187239060
@@ -53,35 +224,196 @@ Sometimes, of course, there could be non-focus-stacking photos taken close to ea
 [4]: https://www.inaturalist.org/observations/169738063
 [5]: https://www.inaturalist.org/observations/182633085
 
-## Details on the _.py_ script
+## ⚙️ Advanced Configuration
 
-Again: **pyfocusstackfo.py** script used to collect *.jpg files into separate folders in order to further using with **photoshop_script_subfolders.js** to obtain focus stacking images.
+### Settings File (`settings.txt`)
+The workflow uses JSON configuration for all parameters:
 
-#### How does it works
+```json
+{
+    "hours_icloud": "24",
+    "stacker": "stacker.js", 
+    "path_grouped": "/Users/yourname/Documents/focus_stacks/fs",
+    "path_iphone": "/Users/yourname/Documents/extracted_photos/",
+    "photoshop_app": "Adobe Photoshop 2025"
+}
+```
 
-1. The script look for all the _.jpg_ files in folder and **sort them alphabetically** with python `sorted()` function. 
-2. Iterating files from first to last, it looking at EXIF field `Date taken`. If neighbour files taken with interval less or equal `MAX_TIME_DELTA`, they added to "stack". If stack accumulates more than `MIN_STACK_LEN` files, this stack added to final list
-3. If stack accumulates less files than `MIN_STACK_LEN`, files from this stack will left where they was without changes (magenta color on pic above)
-4. If stack acuumulates more files than `LENGTH_STACK_WARNING` files, program will print warning message in console, but "stack" will managed as usual
-5. After creating stack, files will be moved in new created folder. Folder names used: `{FIRST_FILE_IN_STACK}_to_{LAST_FILE_IN_STACK}`. This folders than go to Photoshop to create focus stacked images.
-6. Now you can check folders to remove blurred, smoothed or out-of-focus photos. 
+**Configuration Parameters:**
+- `hours_icloud`: Time window for photo extraction (hours back from now)
+- `path_iphone`: Destination folder for Step 1 (photo extraction)  
+- `path_grouped`: Base folder for Step 2 (grouping creates `/fs` subfolder automatically)
+- `stacker`: Path to JavaScript file for Photoshop automation
+- `photoshop_app`: Exact application name for your Photoshop installation
 
-#### Path to jpgs
-There is two modes to use `pyfocusstackfo.py` script:
-* **without arguments**, as shown on pic above.  
-  In this case script will look at current working directory
-* **with `-l` argument** passed to command line, process would looking [like this](/docs/stacking-library.png).  
-In this case you'll face interacive dialog, and «library path» saved in `PATH_LIBRARY_DEFAULT` will be added to your desired path automatically (if you press `Enter`). You'll have to only pass rest of the path (or `Enter` if «library path» _is_ desired path). This is handy if you have long and stable path to your photos and don't want to type `cd /home/photo/long_path` every time.
+### Grouper Algorithm Settings
+Key parameters in `grouper.py` for fine-tuning:
+
+```python
+MAX_TIME_DELTA = timedelta(seconds=2)    # Maximum time between photos in a stack
+MIN_STACK_LEN = 5                        # Minimum photos required to create a stack  
+LENGTH_STACK_WARNING = 10                # Warns about unusually large stacks
+```
+
+**Tuning Guidelines:**
+- **`MAX_TIME_DELTA`**: Increase if using slower shooting intervals (e.g., 3-4 seconds)
+- **`MIN_STACK_LEN`**: Decrease to 3-4 for aggressive grouping, increase to 6-8 for conservative approach
+- **`LENGTH_STACK_WARNING`**: Adjust based on your typical stack sizes
+
+### Runner Behavior Settings
+The workflow orchestrator (`runner.py`) supports:
+
+```bash
+# Use default settings.txt
+python runner.py
+
+# Use custom settings file
+python runner.py my_custom_settings.txt
+
+# Settings file must be valid JSON format
+```
+
+**Intelligent Decision Points:**
+- **Step 2 → Step 3**: Automatic skip when `grouper.py` exits with code 2 (no groups)
+- **Error handling**: Workflow stops on errors with clear diagnostic messages
+- **Status reporting**: Real-time feedback on each step's progress and results
+
+## 🧪 Testing & Validation
+
+The project includes comprehensive test suites to validate the intelligent workflow:
+
+### Test Scripts
+```bash
+# Test the conditional workflow logic
+python test_no_groups.py        # Validates Step 3 skipping when no groups
+
+# Run comprehensive integration tests  
+python test_integration.py      # Tests all workflow scenarios
+
+# Final demonstration of complete workflow
+python demo_final.py           # Shows end-to-end intelligent processing
+```
+
+### Test Scenarios Covered
+- ✅ **Normal operation**: Photos → Groups → Photoshop processing
+- ✅ **No files scenario**: Empty source folder handling  
+- ✅ **No groups scenario**: Photos present but no stacks needed (Step 3 skipped)
+- ✅ **Error handling**: Invalid paths, missing dependencies, etc.
+
+### Validation Results
+All tests pass and confirm:
+- Proper exit code communication between components
+- Conditional Step 3 execution based on grouper results
+- Graceful handling of edge cases
+- Robust error reporting and user feedback
+
+## 🔄 Workflow Details
+
+### Complete 3-Step Process
+
+#### Step 1: Photo Fetcher (`fetcher.py`)
+```bash
+python fetcher.py <destination_folder> <hours>
+```
+- Uses AppleScript to communicate with macOS Photos app
+- Extracts photos taken within the specified time window
+- Handles permissions and exports to destination folder
+- **Exit codes**: 0 = success, 1 = error
+
+#### Step 2: Photo Grouper (`grouper.py`)
+```bash
+python grouper.py <source_folder> <destination_folder>
+```
+1. Scans source folder for _.jpg_ files and **sorts them alphabetically**
+2. Analyzes EXIF `Date taken` field for each photo
+3. Groups photos taken within `MAX_TIME_DELTA` (2 seconds) into potential stacks
+4. Only creates folders for groups with ≥ `MIN_STACK_LEN` photos (5 minimum)
+5. Moves grouped photos to folders named: `{FIRST_FILE}_to_{LAST_FILE}`
+6. **Smart exit codes**:
+   - 0 = success (groups created)
+   - 1 = no JPG files found
+   - 2 = no groups created (all sequences too short)
+
+#### Step 3: Photoshop Processor (`stacker.js`)
+- **Conditionally executed** only when Step 2 creates groups
+- Processes each folder automatically using Photoshop's Auto-Align and Auto-Blend
+- Exports high-quality focus stacked results
+- Handles multiple folders in batch
+
+### Intelligent Decision Making
+
+The workflow automatically handles different scenarios:
+
+```
+📱 Photos extracted → 🔍 Groups analyzed → Decision Point:
+                                        ├── No groups? → Skip Photoshop ✅
+                                        └── Groups found? → Process in Photoshop 🎨
+```
+
+**This intelligent behavior means**:
+- No wasted time on unnecessary Photoshop processing
+- Clean completion when no focus stacking opportunities exist
+- Robust handling of edge cases (no photos, single photos, etc.)
+
+## 🔧 Troubleshooting
+
+### Common Scenarios & Solutions
+
+**"Step 3 was skipped - no groups to process"**
+- ✅ **Normal behavior** when photos don't form focus stacks
+- Check that photos were taken within 2 seconds of each other
+- Verify minimum 5 photos per sequence (adjustable in `grouper.py`)
+
+**"No JPG files found"**
+- Check Photos app permissions for the fetcher script
+- Verify the time window (`hours_icloud` setting) includes your photos
+- Ensure photos are actually present in the specified time range
+
+**"Photoshop automation failed"**
+- Verify `photoshop_app` name matches your installation exactly
+- Check that Photoshop is closed before running the workflow
+- Ensure grouped folders contain actual image files
+
+**Settings file issues**
+- Validate JSON syntax (use online JSON validator if needed)
+- Check all paths exist and are accessible
+- Ensure forward slashes in paths, even on Windows
+
+### Workflow Status Messages
+
+```bash
+# Success with groups created
+✅ Step 1 (fetcher): Success
+✅ Step 2 (grouper): Success - groups created  
+✅ Step 3 (stacker): Success
+
+# Success but no groups (Step 3 skipped)
+✅ Step 1 (fetcher): Success
+⚠️ Step 2 (grouper): No groups created
+⏭️ Step 3 (stacker): Skipped - no groups to process
+
+# Error scenarios  
+❌ Step 1 (fetcher): Error - <specific error message>
+⏭️ Workflow stopped due to error
+```
 
 ## Details on the _.js_ script
 
-The very first version of `photoshop_script_subfolders.js`, provided focus stacking only for three files, was found in Adobe Community [Discussion], made by user *SuperMerlin*.  I add two functions:
-- processing with arbitratry quantity of files
-- looping on arbitrary quantity of subfolders, i.e. multiple focus stacking images
+The JavaScript automation script handles the Adobe Photoshop integration:
 
-Be aware of:
-1. Script **do not crop** resulting photos. If your photos have poor align, then result will have gray-filled areas on the photo edges. You'll have to crop them manually.
-2. If there will be empty folders, script will fail.
+**Original inspiration**: The first version was found in Adobe Community [Discussion] by user *SuperMerlin* for three-file focus stacking.
+
+**Enhancements added**:
+- **Arbitrary file quantity**: Processes focus stacks of any size
+- **Batch processing**: Handles multiple subfolders automatically  
+- **Integration**: Works seamlessly with the Python workflow orchestrator
+
+**Important notes**:
+1. **Auto-cropping not included**: If photos have poor alignment, result may have gray-filled edges requiring manual crop
+2. **Folder validation**: Script requires non-empty folders to function properly
+3. **Photoshop compatibility**: Tested with CC 2020+ versions
+
+The script is automatically invoked by `runner.py` when Step 2 creates focus stacking groups.
 
 
 [Discussion]: https://community.adobe.com/t5/photoshop-ecosystem-discussions/automate-focus-stacking-script-action-help-needed/m-p/10483237

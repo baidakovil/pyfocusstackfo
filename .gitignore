@@ -2,6 +2,7 @@
 *workspace
 settings.json
 .vscode
+.venv
 
 # gimp files
 *gimp*
@@ -12,3 +13,6 @@ __pycache__/
 # Unit test / coverage reports
 .pytest_cache/
 .mypy_cache
+
+# User settings
+user_settings.txt

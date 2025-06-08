@@ -1,0 +1,8 @@
+
+{
+    "hours_icloud":"24",
+    "stacker": "stacker.js",
+    "path_grouped": "/Volumes/External HD/Naturalist/!newstack/fs",
+    "path_iphone": "/Volumes/External HD/Naturalist/!newstack/",
+    "photoshop_app": "Adobe Photoshop 2025"
+}

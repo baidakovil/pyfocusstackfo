@@ -20,9 +20,6 @@ from typing import Dict, List, Tuple
 
 import piexif
 
-#  Path prompted to user when choose folder with jpgs
-PATH_LIBRARY_DEFAULT = '<your-path-where-you-store-folders-with-photos>'
-
 #  Name of the future root folder where stacks will be located
 FOLDER_NAME_ROOT = 'fs'
 
@@ -55,7 +52,7 @@ def read_jpg(jpg_folder: str) -> Tuple[List[str], List[datetime]]:
         print(f'ok.\nGot {len(names)} JPG in folder')
     else:
         print('\nNo JPG files in folder! Exit')
-        sys.exit()
+        sys.exit(1)
 
     dates_bytes = [
         piexif.load(os.path.join(jpg_folder, name))['0th'][306] for name in names
@@ -146,7 +143,7 @@ def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
     """
     if not stacks:
         print('No stacks here! Exit')
-        sys.exit()
+        sys.exit(2)
     folder_count, file_count = 0, 0
     os.mkdir(os.path.join(jpg_folder, FOLDER_NAME_ROOT))
     print(f'\nRoot folder {FOLDER_NAME_ROOT} created')
@@ -167,57 +164,25 @@ def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
     print(f'Ok:\n{folder_count} folders created\n{file_count} files moved')
 
 
-def get_folders() -> str:
-    """
-    Ask user about path where jpgs are stored.
-    Returns:
-        path
-    """
-    if not os.path.isdir(PATH_LIBRARY_DEFAULT):
-        print('DEFAULT LIBRARY PATH DO NOT EXIST!\n!!\n!!CHANGE IT IN LINE 24\n!!')
-    path_library, folder_jpg = '', ' '
-    first_try = True
-    while not os.path.isdir(path_library):
-        if first_try:
-            path_library = input(
-                f'Input library path or press Enter for default, {PATH_LIBRARY_DEFAULT}\n\
-Input: '
-            )
-            first_try = False
-        else:
-            path_library = input('That is not existing path! Please try again:\n')
-        if path_library == '':
-            path_library = PATH_LIBRARY_DEFAULT
-            print('Default choosed. Ok. ', end='')
-    print(f'Library path: {path_library}')
-
-    first_try = True
-
-    while not os.path.isdir(os.path.join(path_library, folder_jpg)):
-        if first_try:
-            folder_jpg = input('\nInput folder name with jpg:\n')
-            first_try = False
-        else:
-            folder_jpg = input('That is not existing folder. Please try again:\n')
-        folder_jpg == '' if folder_jpg == '/' else folder_jpg  # pylint: disable=pointless-statement
-
-    result = os.path.join(path_library, folder_jpg)
-    print(f'Nice. Program will do stack in folder: {result}')
-    return result
-
-
-def main() -> None:
+def main(jpg_folder: str) -> None:
     """
     Start the process. Start!
+    Args:
+        jpg_folder: Path to folder with JPG files.
     """
     print('START\n')
-    try:
-        if sys.argv[1] == '-l':
-            jpg_folder = get_folders()
-        else:
-            jpg_folder = os.getcwd()
-    except IndexError:
-        jpg_folder = os.getcwd()
+    
+    # Normalize the path to handle special characters and ensure it exists
+    jpg_folder = os.path.abspath(os.path.expanduser(jpg_folder))
+    
+    if not os.path.exists(jpg_folder):
+        print(f"Error: Path does not exist: {jpg_folder}")
+        sys.exit(1)
+    
+    if not os.path.isdir(jpg_folder):
+        print(f"Error: Path is not a directory: {jpg_folder}")
+        sys.exit(1)
+    
     names, dates = read_jpg(jpg_folder)
     stacks = get_stacks(names, dates)
     move_stacks(stacks, jpg_folder)
@@ -225,4 +190,9 @@ def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) < 2:
+        print("Usage: python group_photos.py <jpg_folder_path>")
+        print("Note: If path contains special characters like '!', wrap it in single quotes")
+        print("Example: python group_photos.py '/path/with/special!chars'")
+        sys.exit(1)
+    main(sys.argv[1])

@@ -1,25 +1,41 @@
-#target photoshop;
-
 app.bringToFront();
 
-loopFolders();
+// Check if folder path is provided as argument
+if (arguments.length > 0) {
+    var folderPath = arguments[0];
+    loopFolders(folderPath);
+} else {
+    loopFolders();
+}
 
-function loopFolders(){
-	
-var mainFolder = Folder.selectDialog("Please select the folder with folerds to process");    
+function loopFolders(folderPath){
+    
+var mainFolder;
 
-if(mainFolder == null ) return;
+if (folderPath) {
+    mainFolder = new Folder(folderPath);
+    if (!mainFolder.exists) {
+        alert("Folder does not exist: " + folderPath);
+        return;
+    }
+} else {
+    mainFolder = Folder.selectDialog("Please select the folder with folerds to process");    
+    if(mainFolder == null ) return;
+}
 
 var folderList = mainFolder.getFiles();
 
 var folderCount = folderList.length
 
 for (var i = 0; i<folderCount; i++){
-
-main(folderList.shift(), mainFolder)
-
-	};
-		
+    var currentItem = folderList.shift();
+    
+    // Check if the item is actually a folder, not a file
+    if (currentItem instanceof Folder) {
+        main(currentItem, mainFolder);
+    }
+};
+        
 };
 	
 function main(selectedFolder, outFolder){
@@ -51,6 +67,9 @@ selectAllLayers();
 autoAlign();
 
 autoBlendLayers();
+
+// Autocrop to remove transparent areas from alignment
+autoCrop();
 
 var layerName = activeDocument.activeLayer.name.replace(/\....$/i,'');
 
@@ -153,3 +172,67 @@ desc.putBoolean( charIDToTypeID('ClrC'), true );
 executeAction( stringIDToTypeID('mergeAlignedLayers'), desc, DialogModes.NO );
 
 };
+
+function autoCrop() {
+    try {
+        // Method 1: Trim transparent pixels (most common after alignment)
+        var desc = new ActionDescriptor();
+        desc.putEnumerated(charIDToTypeID('Base'), charIDToTypeID('Trns'), charIDToTypeID('Trns'));
+        desc.putBoolean(charIDToTypeID('Top '), true);
+        desc.putBoolean(charIDToTypeID('Btom'), true);
+        desc.putBoolean(charIDToTypeID('Left'), true);
+        desc.putBoolean(charIDToTypeID('Rght'), true);
+        executeAction(charIDToTypeID('Trim'), desc, DialogModes.NO);
+    } catch (e) {
+        try {
+            // Method 2: Fallback to crop to visible bounds if trim fails
+            activeDocument.crop(activeDocument.bounds);
+        } catch (e2) {
+            // If both methods fail, continue without cropping
+        }
+    }
+}
+
+// Alternative autocrop method using content bounds
+function autoCropToBounds() {
+    try {
+        // Get the bounds of all visible content
+        var bounds = activeDocument.bounds;
+        var left = bounds[0].value;
+        var top = bounds[1].value;
+        var right = bounds[2].value;
+        var bottom = bounds[3].value;
+        
+        // Create crop area
+        var cropArea = [left, top, right, bottom];
+        activeDocument.crop(cropArea);
+    } catch (e) {
+        // Continue if cropping fails
+    }
+}
+
+// Smart autocrop that tries multiple strategies
+function smartAutoCrop() {
+    try {
+        // First try trimming transparent pixels
+        autoCrop();
+    } catch (e) {
+        try {
+            // If that fails, try cropping to content bounds
+            autoCropToBounds();
+        } catch (e2) {
+            try {
+                // Last resort: trim based on top-left pixel color
+                var desc = new ActionDescriptor();
+                desc.putEnumerated(charIDToTypeID('Base'), charIDToTypeID('Clr '), charIDToTypeID('TpLf'));
+                desc.putBoolean(charIDToTypeID('Top '), true);
+                desc.putBoolean(charIDToTypeID('Btom'), true);
+                desc.putBoolean(charIDToTypeID('Left'), true);
+                desc.putBoolean(charIDToTypeID('Rght'), true);
+                executeAction(charIDToTypeID('Trim'), desc, DialogModes.NO);
+            } catch (e3) {
+                // If all methods fail, continue without cropping
+            }
+        }
+    }
+}
