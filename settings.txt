@@ -2,7 +2,8 @@
 {
     "hours_icloud":"24",
     "stacker": "stacker.js",
-    "path_grouped": "/Volumes/External HD/Naturalist/!newstack/fs",
-    "path_iphone": "/Volumes/External HD/Naturalist/!newstack/",
+    "folder_grouped": "fs",
+    "path_all_storing": "/Volumes/External HD/Naturalist/",
+    "folder_current_storing": "!newstack",
     "photoshop_app": "Adobe Photoshop 2025"
 }

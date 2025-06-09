@@ -3,24 +3,27 @@ app.bringToFront();
 // Check if folder path is provided as argument
 if (arguments.length > 0) {
     var folderPath = arguments[0];
-    loopFolders(folderPath);
+    var result = loopFolders(folderPath);
+    "Focus stacking completed: " + result; // Return formatted result
 } else {
-    loopFolders();
+    var result = loopFolders();
+    "Focus stacking completed: " + result; // Return formatted result
 }
 
 function loopFolders(folderPath){
     
 var mainFolder;
+var processedFolders = 0;
 
 if (folderPath) {
     mainFolder = new Folder(folderPath);
     if (!mainFolder.exists) {
         alert("Folder does not exist: " + folderPath);
-        return;
+        return "Error: Folder does not exist: " + folderPath;
     }
 } else {
     mainFolder = Folder.selectDialog("Please select the folder with folerds to process");    
-    if(mainFolder == null ) return;
+    if(mainFolder == null ) return "Error: No folder selected";
 }
 
 var folderList = mainFolder.getFiles();
@@ -33,8 +36,11 @@ for (var i = 0; i<folderCount; i++){
     // Check if the item is actually a folder, not a file
     if (currentItem instanceof Folder) {
         main(currentItem, mainFolder);
+        processedFolders++;
     }
 };
+
+return "Success: Processed " + processedFolders + " folder(s) for focus stacking";
         
 };
 	

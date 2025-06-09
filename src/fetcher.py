@@ -45,7 +45,7 @@ def run_applescript(script):
             check=True
         )
         
-        print("✅ AppleScript executed successfully!")
+        print(" AppleScript executed successfully!")
         if result.stdout:
             print(f"Output: {result.stdout}")
         return True
@@ -67,7 +67,7 @@ def validate_destination(destination_path):
     if not path.exists():
         try:
             path.mkdir(parents=True, exist_ok=True)
-            print(f"📁 Created destination folder: {path}")
+            print(f" Created destination folder: {path}")
         except PermissionError:
             print(f"❌ Permission denied: Cannot create folder {path}")
             return None
@@ -102,21 +102,18 @@ def check_photos_app():
 
 def fetch_photos(destination_folder, hours, use_compressed=False):
     """Main function to fetch photos - can be called programmatically."""
-    print("🖼️  iCloud Photo Fetcher")
-    print("=" * 40)
     
     if sys.platform != "darwin":
         print("❌ This script only works on macOS.")
         return False
     
-    print(f"📂 Validating destination folder: {destination_folder}")
+    print(f" Validating destination folder: {destination_folder}")
     validated_folder = validate_destination(destination_folder)
     if not validated_folder:
         return False
     
-    print(f"✅ Destination folder ready: {validated_folder}")
+    print(f" Destination folder ready: {validated_folder}")
     
-    print("🔍 Checking Photos app accessibility...")
     if not check_photos_app():
         print("\n💡 Make sure:")
         print("  1. Photos app is installed")
@@ -124,19 +121,16 @@ def fetch_photos(destination_folder, hours, use_compressed=False):
         print("  3. Your Photos library is accessible")
         return False
     
-    print("✅ Photos app is accessible")
-    
     compression_text = "compressed JPEG" if use_compressed else "original quality"
-    print(f"\n🚀 Starting photo extraction...")
-    print(f"⏰ Looking for photos from last {hours} hours")
-    print(f"📁 Export format: {compression_text}")
-    print(f"📂 Destination: {validated_folder}")
+    print(f"\n Starting photo extraction...")
+    print(f" Looking for photos from last {hours} hours")
+    print(f" Export format: {compression_text}")
+    print(f" Destination: {validated_folder}")
     
     applescript = create_applescript(validated_folder, hours, use_compressed)
     
     if run_applescript(applescript):
-        print("\n🎉 Photo extraction completed!")
-        print(f"📁 Check your destination folder: {validated_folder}")
+        print("\n Photo extraction completed")
         return True
     else:
         print("\n❌ Photo extraction failed.")

@@ -120,7 +120,7 @@ def test_runner_with_no_groups():
 
 if __name__ == "__main__":
     print("Testing 'no groups' scenario...")
-    print("=" * 50)
+    print("=" * 55)
     
     print("\n1. Testing grouper.py exit codes...")
     test1_passed = test_no_groups_scenario()
@@ -128,11 +128,11 @@ if __name__ == "__main__":
     print("\n2. Testing runner.py logic with no groups...")
     test2_passed = test_runner_with_no_groups()
     
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 55)
     if test1_passed and test2_passed:
         print("🎉 All 'no groups' tests passed!")
         print("✅ Step 3 will be correctly skipped when no focus stacking groups are created")
     else:
         print("❌ Some tests failed!")
         
-    print("=" * 50)
+    print("=" * 55)

@@ -38,31 +38,79 @@ TIMESTAMP_FORMAT_EXIF = '%Y:%m:%d %H:%M:%S'
 
 def read_jpg(jpg_folder: str) -> Tuple[List[str], List[datetime]]:
     """
-    Read names of jpg files in source folder and timestamps when they were taken.
+    Read names of image files in source folder and timestamps when they were taken.
     Args:
-        jpg_folder: path to folder where jpgs are stored
+        jpg_folder: path to folder where image files are stored
     Returns:
-        list of names & list of datetimes
+        list of names & list of datetimes (synchronized pairs)
     """
-    print('\nRead jpg...', end='')
-    names = [file for file in os.listdir(jpg_folder) if file.lower().endswith('.jpg')]
+    print('\nRead image files...', end='')
+    
+    # Supported image file extensions
+    image_extensions = {'.jpg', '.jpeg', '.tiff', '.tif', '.bmp', '.png', '.heic'}
+    
+    names = []
+    for file in os.listdir(jpg_folder):
+        if os.path.isfile(os.path.join(jpg_folder, file)):
+            _, ext = os.path.splitext(file)
+            if ext.lower() in image_extensions:
+                names.append(file)
+    
     names = sorted(names)
 
     if len(names) != 0:
-        print(f'ok.\nGot {len(names)} JPG in folder')
+        print(f'ok.\nGot {len(names)} image files in folder')
     else:
-        print('\nNo JPG files in folder! Exit')
+        print('\nNo image files in folder! Exit')
         sys.exit(1)
 
-    dates_bytes = [
-        piexif.load(os.path.join(jpg_folder, name))['0th'][306] for name in names
-    ]
-
-    tsf = TIMESTAMP_FORMAT_EXIF
-    dates = sorted([datetime.strptime(str(date)[2:-1], tsf) for date in dates_bytes])
+    # Extract timestamps with error handling
+    photo_data = []
+    skipped_files = []
+    
+    for name in names:
+        try:
+            file_path = os.path.join(jpg_folder, name)
+            exif_dict = piexif.load(file_path)
+            
+            # Check if EXIF has DateTime tag
+            if '0th' in exif_dict and 306 in exif_dict['0th']:
+                date_bytes = exif_dict['0th'][306]
+                # Proper EXIF datetime decoding
+                if isinstance(date_bytes, bytes):
+                    date_str = date_bytes.decode('ascii').rstrip('\x00')
+                else:
+                    date_str = str(date_bytes).strip()
+                
+                date_obj = datetime.strptime(date_str, TIMESTAMP_FORMAT_EXIF)
+                photo_data.append((name, date_obj))
+            else:
+                print(f'\n⚠️  WARNING: No DateTime EXIF data in {name} - skipping file')
+                skipped_files.append(name)
+                
+        except Exception as e:
+            print(f'\n🚨 CRITICAL EXIF ERROR 🚨')
+            print(f'❌ FAILED TO READ EXIF FROM: {name}')
+            print(f'❌ ERROR: {str(e)}')
+            print(f'❌ THIS FILE WILL BE SKIPPED')
+            skipped_files.append(name)
+    
+    if not photo_data:
+        print(f'\n🚨 CRITICAL ERROR 🚨')
+        print(f'❌ NO FILES WITH VALID EXIF TIMESTAMPS FOUND!')
+        print(f'❌ CANNOT PROCEED WITH FOCUS STACKING')
+        sys.exit(1)
+    
+    if skipped_files:
+        print(f'\n⚠️  Skipped {len(skipped_files)} files without valid EXIF timestamps')
+    
+    # Sort by timestamp to maintain name-date synchronization
+    photo_data.sort(key=lambda x: x[1])
+    names, dates = zip(*photo_data)
+    names, dates = list(names), list(dates)
 
     print(
-        f'Got {len(dates)} timestamps in JPGs\nFROM: {dates[0]} \nTO  : {dates[-1]}\n'
+        f'Got {len(dates)} valid timestamps in image files\nFROM: {dates[0]} \nTO  : {dates[-1]}\n'
     )
 
     return names, dates
@@ -106,6 +154,11 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
     stack = []
     stacks: List[List[str]] = []
     stack_stat: Dict[int, int] = {}
+    
+    # Handle edge case: no photos to process
+    if not names:
+        return stacks
+    
     stack.append(names[0])
 
     for i in range(1, len(dates)):
@@ -126,6 +179,11 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
             else:
                 # Start new stack
                 stack = [names[i]]
+    
+    # Handle single photo edge case - if stack still exists, process it
+    if 'stack' in locals() and stack:
+        stacks, stack_stat = done_stack(stacks, stack_stat, stack)
+    
     #  Below just prettyprint
     for stacksize, stackcount in sorted(stack_stat.items(), key=operator.itemgetter(0)):
         spacer = ' ' if stacksize < 10 else ''
@@ -135,31 +193,84 @@ def get_stacks(names: List[str], dates: List[datetime]) -> List[List[str]]:
 
 def move_stacks(stacks: List[List[str]], jpg_folder: str) -> None:
     """
-    Create 'fs' folder -> all the stack-folders inside of it -> move jpg-files-list
+    Create 'fs' folder -> all the stack-folders inside of it -> move image-files-list
     (stacks) to their final folders
     Args:
         stacks: list of stacks
-        JPGPATH: folder where located files in `stacks`
+        jpg_folder: folder where located files in `stacks`
     """
     if not stacks:
         print('No stacks here! Exit')
         sys.exit(2)
+    
+    # Check if 'fs' folder already exists
+    fs_folder_path = os.path.join(jpg_folder, FOLDER_NAME_ROOT)
+    if os.path.exists(fs_folder_path):
+        print(f'\n🚨 CRITICAL ERROR 🚨')
+        print(f'❌ FOLDER "{FOLDER_NAME_ROOT}" ALREADY EXISTS!')
+        print(f'❌ PATH: {fs_folder_path}')
+        print(f'❌ CANNOT PROCEED - THIS INDICATES PHOTOS WERE ALREADY PROCESSED')
+        print(f'❌ PLEASE REMOVE THE FOLDER OR USE A DIFFERENT DIRECTORY')
+        sys.exit(1)
+    
     folder_count, file_count = 0, 0
-    os.mkdir(os.path.join(jpg_folder, FOLDER_NAME_ROOT))
+    os.mkdir(fs_folder_path)
     print(f'\nRoot folder {FOLDER_NAME_ROOT} created')
     print('Start moving files...', end='')
+    
     for stack in stacks:
+        # Safer filename handling for folder naming
+        def safe_filename_for_folder(filename):
+            name, ext = os.path.splitext(filename)
+            return name if name else filename
+        
         #  Prepare folder for moving files to
-        stack_dirname = stack[0][:-4] + '_to_' + stack[-1][:-4]
-        stack_path = os.path.join(jpg_folder, FOLDER_NAME_ROOT, stack_dirname)
+        first_name = safe_filename_for_folder(stack[0])
+        last_name = safe_filename_for_folder(stack[-1])
+        stack_dirname = f"{first_name}_to_{last_name}"
+        stack_path = os.path.join(fs_folder_path, stack_dirname)
+        
+        # Check if stack folder already exists
+        if os.path.exists(stack_path):
+            print(f'\n🚨 CRITICAL ERROR 🚨')
+            print(f'❌ STACK FOLDER ALREADY EXISTS: {stack_dirname}')
+            print(f'❌ THIS SHOULD NOT HAPPEN - ABORTING TO PREVENT DATA LOSS')
+            sys.exit(1)
+        
         os.mkdir(stack_path)
         folder_count += 1
+        
         #  Move files from origin to new folders
         for name in stack:
             src = os.path.join(jpg_folder, name)
             dst = os.path.join(stack_path, name)
-            os.rename(src, dst)
-            file_count += 1
+            
+            # Check if source file exists
+            if not os.path.exists(src):
+                print(f'\n🚨 CRITICAL ERROR 🚨')
+                print(f'❌ SOURCE FILE NOT FOUND: {name}')
+                print(f'❌ PATH: {src}')
+                print(f'❌ CANNOT CONTINUE FILE MOVING')
+                sys.exit(1)
+            
+            # Check if destination file already exists
+            if os.path.exists(dst):
+                print(f'\n🚨 CRITICAL ERROR 🚨')
+                print(f'❌ DESTINATION FILE ALREADY EXISTS: {name}')
+                print(f'❌ PATH: {dst}')
+                print(f'❌ ABORTING TO PREVENT FILE OVERWRITE')
+                sys.exit(1)
+            
+            try:
+                os.rename(src, dst)
+                file_count += 1
+            except Exception as e:
+                print(f'\n🚨 CRITICAL FILE MOVE ERROR 🚨')
+                print(f'❌ FAILED TO MOVE: {name}')
+                print(f'❌ FROM: {src}')
+                print(f'❌ TO: {dst}')
+                print(f'❌ ERROR: {str(e)}')
+                sys.exit(1)
 
     print(f'Ok:\n{folder_count} folders created\n{file_count} files moved')
 
@@ -168,7 +279,7 @@ def main(jpg_folder: str) -> None:
     """
     Start the process. Start!
     Args:
-        jpg_folder: Path to folder with JPG files.
+        jpg_folder: Path to folder with image files.
     """
     print('START\n')
     
@@ -191,7 +302,7 @@ def main(jpg_folder: str) -> None:
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print("Usage: python group_photos.py <jpg_folder_path>")
+        print("Usage: python group_photos.py <image_folder_path>")
         print("Note: If path contains special characters like '!', wrap it in single quotes")
         print("Example: python group_photos.py '/path/with/special!chars'")
         sys.exit(1)
