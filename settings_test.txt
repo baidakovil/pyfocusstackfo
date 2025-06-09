@@ -1,7 +1,7 @@
 {
     "hours_icloud":"1",
     "stacker": "stacker.js",
-    "path_grouped": "/Users/baidakov/Git/pyfocusstackfo/test_output/fs",
-    "path_iphone": "/Users/baidakov/Git/pyfocusstackfo/test_output/",
+    "path_grouped": "/Users/baidakov/Git/ultimate_focusstacking_with_apple_and_adobe/test_output/fs",
+    "path_iphone": "/Users/baidakov/Git/ultimate_focusstacking_with_apple_and_adobe/test_output/",
     "photoshop_app": "Adobe Photoshop 2025"
 }

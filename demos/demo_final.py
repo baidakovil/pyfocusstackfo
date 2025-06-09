@@ -11,7 +11,7 @@ import shutil
 from zipfile import ZipFile
 
 # Add the current directory to the path to import runner functions
-sys.path.insert(0, '/Users/baidakov/Git/pyfocusstackfo')
+sys.path.insert(0, '/Users/baidakov/Git/ultimate_focusstacking_with_apple_and_adobe')
 from runner import run_grouper
 
 def demo_workflow_scenarios():
@@ -27,7 +27,7 @@ def demo_workflow_scenarios():
     test_dir1 = tempfile.mkdtemp(prefix="demo_with_groups_")
     try:
         # Extract photos that create groups
-        test_zip = "/Users/baidakov/Git/pyfocusstackfo/test/test_97f.zip"
+        test_zip = "/Users/baidakov/Git/ultimate_focusstacking_with_apple_and_adobe/test/test_97f.zip"
         if os.path.exists(test_zip):
             with ZipFile(test_zip, 'r') as zip_file:
                 zip_file.extractall(test_dir1)
@@ -65,7 +65,7 @@ def demo_workflow_scenarios():
     test_dir2 = tempfile.mkdtemp(prefix="demo_no_groups_")
     try:
         # Extract photos that DON'T create groups
-        test_zip = "/Users/baidakov/Git/pyfocusstackfo/test/test_no_st.zip"
+        test_zip = "/Users/baidakov/Git/ultimate_focusstacking_with_apple_and_adobe/test/test_no_st.zip"
         if os.path.exists(test_zip):
             with ZipFile(test_zip, 'r') as zip_file:
                 zip_file.extractall(test_dir2)

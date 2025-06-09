@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PyFocusStackFO - Main Entry Point
+Ultimate Focus Stacking with Apple and Adobe - Main Entry Point
 
 This is the main entry point for the focus stacking workflow.
 It maintains compatibility with the existing StackDealer.app while

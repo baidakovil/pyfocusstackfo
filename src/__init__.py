@@ -1,5 +1,5 @@
 """
-PyFocusStackFO - Automated Focus Stacking Workflow
+Ultimate Focus Stacking with Apple and Adobe - Automated Focus Stacking Workflow
 Copyright (C) 2023 Ilia Baidakov <baidakovil@gmail.com>
 
 This program is free software: you can redistribute it and/or modify it under the

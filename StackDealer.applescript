@@ -5,7 +5,7 @@ on run
 	set scriptPath to (path to me as text)
 	set workingDir to do shell script "dirname " & quoted form of POSIX path of scriptPath
 	
-	display notification "Starting focus stacking workflow in Terminal..." with title "PyFocusStackFO"
+	display notification "Starting focus stacking workflow in Terminal..." with title "Ultimate Focus Stacking"
 	
 	-- Create the command to run in Terminal
 	set terminalCommand to "cd " & quoted form of workingDir & " && source .venv/bin/activate && python main.py"
@@ -21,6 +21,6 @@ on run
 			if not busy of newTab then exit repeat
 		end repeat
 		
-		display notification "Workflow completed! Check Terminal for results." with title "PyFocusStackFO"
+		display notification "Workflow completed! Check Terminal for results." with title "Ultimate Focus Stacking"
 	end tell
 end run

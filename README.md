@@ -1,6 +1,6 @@
-# pyfocusstackfo
+# ultimate_focusstacking_with_apple_and_adobe
 
-[![Pylint](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/pylint.yml) [![Testing](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/python-pytest-flake8.yml) [![mypy](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml/badge.svg)](https://github.com/baidakovil/pyfocusstackfo/actions/workflows/mypy.yml)
+[![Pylint](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/pylint.yml/badge.svg)](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/pylint.yml) [![Testing](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/python-pytest-flake8.yml/badge.svg)](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/python-pytest-flake8.yml) [![mypy](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/mypy.yml/badge.svg)](https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe/actions/workflows/mypy.yml)
 
 Automated focus stacking workflow that handles photo extraction, grouping, and final stacked images. Supports photos from any source.
 
@@ -30,8 +30,8 @@ Automated focus stacking workflow that handles photo extraction, grouping, and f
 ### Installation & Setup
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/baidakovil/pyfocusstackfo.git
-   cd pyfocusstackfo
+   git clone https://github.com/baidakovil/ultimate_focusstacking_with_apple_and_adobe.git
+   cd ultimate_focusstacking_with_apple_and_adobe
    ```
 
 2. **Install dependencies**:

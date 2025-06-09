@@ -1,4 +1,4 @@
-## pyfocusstackfo — Utility to reallocate photos taken for focus stacking into folders.
+## ultimate_focusstacking_with_apple_and_adobe — Utility to reallocate photos taken for focus stacking into folders.
 # Copyright (C) 2023 Ilia Baidakov <baidakovil@gmail.com>
 # This program is free software: you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software Foundation,
@@ -10,7 +10,7 @@
 
 # You should have received a copy of the GNU General Public License along with this
 # program.  If not, see <https://www.gnu.org/licenses/>.
-"""This is the only file needed to run pyfocusstackfo. Check settings before using."""
+"""This is the only file needed to run ultimate_focusstacking_with_apple_and_adobe. Check settings before using."""
 
 import operator
 import os
