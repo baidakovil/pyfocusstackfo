@@ -56,7 +56,7 @@ if(selectedFolder == null ) return;
 
 var threeFiles = new Array();
 
-var PictureFiles = selectedFolder.getFiles(/\.(jpg|jpe|dng|bmp|tif|tiff|psd|crw|cr2|exr|pcx|nef|dcr|dc2|erf|raf|orf|tga|mos|pef|png)$/i);
+var PictureFiles = selectedFolder.getFiles(/\.(jpg|jpe|jpeg|dng|bmp|tif|tiff|psd|crw|cr2|exr|pcx|nef|dcr|dc2|erf|raf|orf|tga|mos|pef|png)$/i);
 
 var filescount = PictureFiles.length
 
